@@ -3,22 +3,23 @@ import LoginPage from './pages/Login';
 import RegisterPage from './pages/RegisterPage';
 import Homepage from './pages/Homepage';
 import Forgot from './pages/Forgot';
+import URLS from './utils/enums';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: URLS.HOME,
     element: <Homepage />,
   },
   {
-    path: '/login',
+    path: URLS.LOGIN,
     element: <LoginPage />,
   },
   {
-    path: '/register',
+    path: URLS.REGISTER,
     element: <RegisterPage />,
   },
   {
-    path: '/forgot',
+    path: URLS.FORGOT,
     element: <Forgot />
   }
 ]);
