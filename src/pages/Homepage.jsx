@@ -1,9 +1,17 @@
-import React from 'react'
+import Ads from '../components/Ads';
+import Header from '../components/Header';
+import QuestionList from '../components/QuestionList';
 
 function Homepage() {
   return (
-    <div>Homepage</div>
-  )
+    <>
+      <Header />
+      <main className='flex'>
+        <QuestionList />
+        <Ads />
+      </main>
+    </>
+  );
 }
 
-export default Homepage
+export default Homepage;
