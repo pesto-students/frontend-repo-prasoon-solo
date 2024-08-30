@@ -1,9 +1,9 @@
 const URLS = {
-  HOME:'/',
+  HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT: '/forgot',
+  PROBLEM: '/problem',
 };
-
 
 export default URLS;

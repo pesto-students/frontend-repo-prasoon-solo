@@ -5,7 +5,7 @@ import GFG from '../assets/images/gfg.png';
 
 function Ads() {
   return (
-    <div className='bg-neutral-800 basis-1/3 h-screen p-4'>
+    <div className='bg-dark-layer-2 basis-1/3 h-screen p-4'>
       <article className='h-60 p-2 mt-1'>
         <img src={PestoAd} className='w-full h-full border rounded-xl' />
       </article>

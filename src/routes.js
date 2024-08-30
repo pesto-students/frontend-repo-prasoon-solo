@@ -1,14 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom';
-import LoginPage from './pages/Login';
+import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import Homepage from './pages/Homepage';
-import Forgot from './pages/Forgot';
+import HomePage from './pages/HomePage';
+import ForgotPage from './pages/ForgotPage';
 import URLS from './utils/enums';
+import ProblemPage from './pages/ProblemPage';
 
 const router = createBrowserRouter([
   {
     path: URLS.HOME,
-    element: <Homepage />,
+    element: <HomePage />,
   },
   {
     path: URLS.LOGIN,
@@ -20,8 +21,12 @@ const router = createBrowserRouter([
   },
   {
     path: URLS.FORGOT,
-    element: <Forgot />
-  }
+    element: <ForgotPage />,
+  },
+  {
+    path: URLS.PROBLEM,
+    element: <ProblemPage />,
+  },
 ]);
 
 export default router;
