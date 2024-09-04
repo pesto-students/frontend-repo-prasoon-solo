@@ -1,29 +1,73 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import axios from 'axios';
-
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ToastContainer, toast } from 'react-toastify';
 import URLS from '../utils/enums';
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
-  console.log(email, password);
-  const signupHandler = async () => {
-    const result = await axios.post(
-      'http://localhost:8080/api/v1/auth/register',
-      {
-        email,
-        password,
-        fullName,
-      }
-    );
-    console.log('result', result);
+  const signupUserSchema = z
+    .object({
+      email: z
+        .string({ message: 'Email is required.' })
+        .email({ message: 'Please enter a valid Email.' }),
+      password: z
+        .string({ message: 'Password is required.' })
+        .min(6, { message: 'Password must be atleast 6 characters long.' }),
+      confirmPassword: z
+        .string({ message: 'Confirm Password is required.' })
+        .min(6, {
+          message: 'Confirm Password must be atleast 6 characters long.',
+        }),
+      fullName: z
+        .string({ message: 'Full Name is required.' })
+        .min(6, { message: 'Full Name must be atleast 6 characters long.' }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(signupUserSchema),
+  });
+
+  const onSubmitHandler = async (data) => {
+    try {
+      console.log('triggered');
+      const { email, password, fullName, confirmPassword } = data;
+      const result = await axios.post(
+        'http://localhost:8080/api/v1/auth/register',
+        {
+          email,
+          password,
+          confirmPassword,
+          fullName,
+        }
+      );
+      console.log('result', result);
+      if (result.status !== 200) throw new Error(result);
+    } catch (error) {
+      console.log('error', error);
+      setError('root', error.response?.data);
+      toast.error(error.response?.data.message, { theme: 'colored' });
+    }
   };
+  console.log('errors', errors);
   return (
     <div className='h-screen flex justify-center items-center text-white bg-slate-200'>
-      <div className='w-96 h-3/5'>
-        <div className='bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex flex-col h-full border rounded-xl '>
+      <ToastContainer />
+      <div className='w-96 h-3/4'>
+        <form
+          onSubmit={handleSubmit(onSubmitHandler)}
+          className='bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex flex-col h-full border rounded-xl '
+        >
           <div className='self-center w-3/4 mt-6 text-xl'>
             Register to neetcode
           </div>
@@ -33,54 +77,105 @@ const RegisterPage = () => {
             </label>
             <input
               id='email'
-              type='email'
-              required
+              {...register('email')}
               placeholder='johndoe@gmail.com'
-              className='border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                errors.email
+                  ? 'border-4 border-rose-700'
+                  : 'border border-white'
+              }`}
             />
+            {errors.email && (
+              <span className='text-xs ml-12 text-rose-700'>
+                {errors.email.message}
+              </span>
+            )}
           </div>
-          <div className='flex flex-col mt-4'>
+          <div className={`flex flex-col ${errors.email ? 'mt-2' : 'mt-6'}`}>
             <label htmlFor='name' className='self-center w-3/4 text-xs'>
               Name
             </label>
             <input
               id='name'
               type='text'
-              required
+              {...register('fullName')}
               placeholder='John Doe'
-              className='border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black'
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                errors.fullName
+                  ? 'border-4 border-rose-700'
+                  : 'border border-white'
+              }`}
             />
+            {errors.fullName && (
+              <span className='text-xs ml-12 text-rose-700'>
+                {errors.fullName.message}
+              </span>
+            )}
           </div>
-          <div className='flex flex-col mt-4'>
+          <div className={`flex flex-col ${errors.fullName ? 'mt-2' : 'mt-6'}`}>
             <label htmlFor='password' className='self-center w-3/4 text-xs'>
               Password
             </label>
             <input
               id='password'
               type='password'
-              required
-              className='border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
+              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                errors.password
+                  ? 'border-4 border-rose-700'
+                  : 'border border-white'
+              }`}
             />
+            {errors.password && (
+              <span className='text-xs ml-12 text-rose-700'>
+                {errors.password.message}
+              </span>
+            )}
+          </div>
+          <div className={`flex flex-col ${errors.password ? 'mt-2' : 'mt-6'}`}>
+            <label
+              htmlFor='confirmPassword'
+              className='self-center w-3/4 text-xs'
+            >
+              Confirm Password
+            </label>
+            <input
+              id='confirmPassword'
+              type='password'
+              {...register('confirmPassword')}
+              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                errors.confirmPassword
+                  ? 'border-4 border-rose-700'
+                  : 'border border-white'
+              }`}
+            />
+            {errors.confirmPassword && (
+              <span className='text-xs ml-12 text-rose-700'>
+                {errors.confirmPassword.message}
+              </span>
+            )}
           </div>
           <button
-            onClick={signupHandler}
-            className='bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 w-3/4 border rounded-lg self-center h-10 mt-6 p-2'
+            type='submit'
+            disabled={isSubmitting}
+            className={`bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 w-3/4 border rounded-lg self-center h-10 p-2 ${
+              errors.confirmPassword ? 'mt-4' : 'mt-8'
+            }`}
           >
-            Register
+            {isSubmitting ? 'Loading' : 'Register'}
           </button>
-          <p className='mt-8 ml-12'>
+          {errors.root && (
+            <span className='text-xs ml-12 text-rose-700 mt-2'>
+              {errors.root.message}
+            </span>
+          )}
+          <p className={`ml-12 ${errors.root ? 'mt-6' : 'mt-12'}`}>
             Already have an account ?{' '}
             <Link to={URLS.LOGIN} className='text-blue-800'>
               Login
             </Link>
           </p>
-        </div>
+        </form>
       </div>
     </div>
   );
