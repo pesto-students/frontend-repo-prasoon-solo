@@ -1,12 +1,22 @@
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link,useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ToastContainer, toast } from 'react-toastify';
 import URLS from '../utils/enums';
+import authAxios from '../utils/authAxios';
+import Header from '../components/Header';
+import { useEffect } from 'react';
 
 const RegisterPage = () => {
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(user?.id) navigate(URLS.HOME)
+  },[])
+
+
   const signupUserSchema = z
     .object({
       email: z
@@ -42,15 +52,12 @@ const RegisterPage = () => {
     try {
       console.log('triggered');
       const { email, password, fullName, confirmPassword } = data;
-      const result = await axios.post(
-        'http://localhost:8080/api/v1/auth/register',
-        {
-          email,
-          password,
-          confirmPassword,
-          fullName,
-        }
-      );
+      const result = await authAxios.post('auth/register', {
+        email,
+        password,
+        confirmPassword,
+        fullName,
+      });
       console.log('result', result);
       if (result.status !== 200) throw new Error(result);
     } catch (error) {
@@ -61,123 +68,130 @@ const RegisterPage = () => {
   };
   console.log('errors', errors);
   return (
-    <div className='h-screen flex justify-center items-center text-white bg-slate-200'>
+    <>
+      <Header />
       <ToastContainer />
-      <div className='w-96 h-3/4'>
-        <form
-          onSubmit={handleSubmit(onSubmitHandler)}
-          className='bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex flex-col h-full border rounded-xl '
-        >
-          <div className='self-center w-3/4 mt-6 text-xl'>
-            Register to neetcode
-          </div>
-          <div className='flex flex-col mt-4'>
-            <label htmlFor='email' className='self-center w-3/4 text-xs'>
-              Email
-            </label>
-            <input
-              id='email'
-              {...register('email')}
-              placeholder='johndoe@gmail.com'
-              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
-                errors.email
-                  ? 'border-4 border-rose-700'
-                  : 'border border-white'
-              }`}
-            />
-            {errors.email && (
-              <span className='text-xs ml-12 text-rose-700'>
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-          <div className={`flex flex-col ${errors.email ? 'mt-2' : 'mt-6'}`}>
-            <label htmlFor='name' className='self-center w-3/4 text-xs'>
-              Name
-            </label>
-            <input
-              id='name'
-              type='text'
-              {...register('fullName')}
-              placeholder='John Doe'
-              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
-                errors.fullName
-                  ? 'border-4 border-rose-700'
-                  : 'border border-white'
-              }`}
-            />
-            {errors.fullName && (
-              <span className='text-xs ml-12 text-rose-700'>
-                {errors.fullName.message}
-              </span>
-            )}
-          </div>
-          <div className={`flex flex-col ${errors.fullName ? 'mt-2' : 'mt-6'}`}>
-            <label htmlFor='password' className='self-center w-3/4 text-xs'>
-              Password
-            </label>
-            <input
-              id='password'
-              type='password'
-              {...register('password')}
-              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
-                errors.password
-                  ? 'border-4 border-rose-700'
-                  : 'border border-white'
-              }`}
-            />
-            {errors.password && (
-              <span className='text-xs ml-12 text-rose-700'>
-                {errors.password.message}
-              </span>
-            )}
-          </div>
-          <div className={`flex flex-col ${errors.password ? 'mt-2' : 'mt-6'}`}>
-            <label
-              htmlFor='confirmPassword'
-              className='self-center w-3/4 text-xs'
-            >
-              Confirm Password
-            </label>
-            <input
-              id='confirmPassword'
-              type='password'
-              {...register('confirmPassword')}
-              className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
-                errors.confirmPassword
-                  ? 'border-4 border-rose-700'
-                  : 'border border-white'
-              }`}
-            />
-            {errors.confirmPassword && (
-              <span className='text-xs ml-12 text-rose-700'>
-                {errors.confirmPassword.message}
-              </span>
-            )}
-          </div>
-          <button
-            type='submit'
-            disabled={isSubmitting}
-            className={`bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 w-3/4 border rounded-lg self-center h-10 p-2 ${
-              errors.confirmPassword ? 'mt-4' : 'mt-8'
-            }`}
+      <div className='h-screen flex justify-center items-center text-white bg-slate-200'>
+        <div className='w-96 h-3/4'>
+          <form
+            onSubmit={handleSubmit(onSubmitHandler)}
+            className='bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500 flex flex-col h-full border rounded-xl '
           >
-            {isSubmitting ? 'Loading' : 'Register'}
-          </button>
-          {errors.root && (
-            <span className='text-xs ml-12 text-rose-700 mt-2'>
-              {errors.root.message}
-            </span>
-          )}
-          <p className={`ml-12 ${errors.root ? 'mt-6' : 'mt-12'}`}>
-            Already have an account ?{' '}
-            <Link to={URLS.LOGIN} className='text-blue-800'>
-              Login
-            </Link>
-          </p>
-        </form>
+            <div className='self-center w-3/4 mt-6 text-xl'>
+              Register to neetcode
+            </div>
+            <div className='flex flex-col mt-4'>
+              <label htmlFor='email' className='self-center w-3/4 text-xs'>
+                Email
+              </label>
+              <input
+                id='email'
+                {...register('email')}
+                placeholder='johndoe@gmail.com'
+                className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                  errors.email
+                    ? 'border-4 border-rose-700'
+                    : 'border border-white'
+                }`}
+              />
+              {errors.email && (
+                <span className='text-xs ml-12 text-rose-700'>
+                  {errors.email.message}
+                </span>
+              )}
+            </div>
+            <div className={`flex flex-col ${errors.email ? 'mt-2' : 'mt-6'}`}>
+              <label htmlFor='name' className='self-center w-3/4 text-xs'>
+                Name
+              </label>
+              <input
+                id='name'
+                type='text'
+                {...register('fullName')}
+                placeholder='John Doe'
+                className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                  errors.fullName
+                    ? 'border-4 border-rose-700'
+                    : 'border border-white'
+                }`}
+              />
+              {errors.fullName && (
+                <span className='text-xs ml-12 text-rose-700'>
+                  {errors.fullName.message}
+                </span>
+              )}
+            </div>
+            <div
+              className={`flex flex-col ${errors.fullName ? 'mt-2' : 'mt-6'}`}
+            >
+              <label htmlFor='password' className='self-center w-3/4 text-xs'>
+                Password
+              </label>
+              <input
+                id='password'
+                type='password'
+                {...register('password')}
+                className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                  errors.password
+                    ? 'border-4 border-rose-700'
+                    : 'border border-white'
+                }`}
+              />
+              {errors.password && (
+                <span className='text-xs ml-12 text-rose-700'>
+                  {errors.password.message}
+                </span>
+              )}
+            </div>
+            <div
+              className={`flex flex-col ${errors.password ? 'mt-2' : 'mt-6'}`}
+            >
+              <label
+                htmlFor='confirmPassword'
+                className='self-center w-3/4 text-xs'
+              >
+                Confirm Password
+              </label>
+              <input
+                id='confirmPassword'
+                type='password'
+                {...register('confirmPassword')}
+                className={`border border-white rounded-lg w-3/4 self-center h-10 mt-2 p-2 text-black ${
+                  errors.confirmPassword
+                    ? 'border-4 border-rose-700'
+                    : 'border border-white'
+                }`}
+              />
+              {errors.confirmPassword && (
+                <span className='text-xs ml-12 text-rose-700'>
+                  {errors.confirmPassword.message}
+                </span>
+              )}
+            </div>
+            <button
+              type='submit'
+              disabled={isSubmitting}
+              className={`bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-400 w-3/4 border rounded-lg self-center h-10 p-2 ${
+                errors.confirmPassword ? 'mt-4' : 'mt-8'
+              }`}
+            >
+              {isSubmitting ? 'Loading' : 'Register'}
+            </button>
+            {errors.root && (
+              <span className='text-xs ml-12 text-rose-700 mt-2'>
+                {errors.root.message}
+              </span>
+            )}
+            <p className={`ml-12 ${errors.root ? 'mt-6' : 'mt-12'}`}>
+              Already have an account ?{' '}
+              <Link to={URLS.LOGIN} className='text-blue-800'>
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
