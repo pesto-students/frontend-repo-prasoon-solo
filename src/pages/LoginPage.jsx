@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import URLS from '../utils/enums';
+import {URLS} from '../utils/enums';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

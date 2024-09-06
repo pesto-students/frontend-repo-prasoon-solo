@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo-full.png';
-import URLS from '../utils/enums';
+import {URLS} from '../utils/enums';
 import { useEffect, useState } from 'react';
 
 const Header = () => {

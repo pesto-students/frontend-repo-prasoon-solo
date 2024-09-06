@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ToastContainer, toast } from 'react-toastify';
-import URLS from '../utils/enums';
+import {URLS} from '../utils/enums';
 import authAxios from '../utils/authAxios';
 import Header from '../components/Header';
 import { useEffect } from 'react';
@@ -70,7 +70,6 @@ const RegisterPage = () => {
   return (
     <>
       <Header />
-      <ToastContainer />
       <div className='h-screen flex justify-center items-center text-white bg-slate-200'>
         <div className='w-96 h-3/4'>
           <form

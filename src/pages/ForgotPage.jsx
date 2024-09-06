@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import URLS from '../utils/enums';
+import {URLS} from '../utils/enums';
 
 const ForgotPage = () => {
   return (

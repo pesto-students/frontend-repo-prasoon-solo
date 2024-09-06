@@ -3,7 +3,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import ForgotPage from './pages/ForgotPage';
-import URLS from './utils/enums';
+import {URLS} from './utils/enums';
 import ProblemPage from './pages/ProblemPage';
 
 const router = createBrowserRouter([
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     element: <ForgotPage />,
   },
   {
-    path: URLS.PROBLEM,
+    path: `${URLS.PROBLEM}/:id`,
     element: <ProblemPage />,
   },
 ]);

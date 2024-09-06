@@ -6,4 +6,10 @@ const URLS = {
   PROBLEM: '/problem',
 };
 
-export default URLS;
+const TESTCASETYPE = {
+  CASE1 : 'CASE1',
+  CASE2 : 'CASE2',
+  CASE3 : 'CASE3',
+}
+
+export {URLS, TESTCASETYPE};
