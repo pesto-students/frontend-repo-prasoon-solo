@@ -5,15 +5,15 @@ import TestCases from './TestCases';
 
 const Answer = (props) => {
   return (
-    <div className='flex flex-col bg-red-500 h-screen'>
+    <div className='flex flex-col'>
       <PreferenceNavbar />
       <Split
         className=''
         direction='vertical'
         sizes={[60, 40]}
       >
-        <div className='bg-dark-layer-1 h-56'>
-          <ReactCodeMirror />
+        <div className='bg-dark-layer-1'>
+          <ReactCodeMirror className='h-56' />
         </div>
         <div className='h-56 bg-blue-500'>
           <TestCases {...props}/>

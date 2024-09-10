@@ -43,7 +43,7 @@ const Header = () => {
       );
     }
   };
-  console.log('user=>', user);
+  // console.log('user=>', user);
 
   return (
     <header className='bg-dark-layer-1 h-14 flex justify-between'>

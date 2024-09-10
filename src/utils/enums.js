@@ -4,6 +4,7 @@ const URLS = {
   REGISTER: '/register',
   FORGOT: '/forgot',
   PROBLEM: '/problem',
+  CREATE:'/create'
 };
 
 const TESTCASETYPE = {

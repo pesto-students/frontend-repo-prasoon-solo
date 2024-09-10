@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import ForgotPage from './pages/ForgotPage';
 import {URLS} from './utils/enums';
 import ProblemPage from './pages/ProblemPage';
+import RegisterProblemPage from './pages/RegisterProblemPage';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
     path: `${URLS.PROBLEM}/:id`,
     element: <ProblemPage />,
   },
+  {
+    path: `${URLS.PROBLEM}${URLS.CREATE}`,
+    // element:<p>dsdsdsds</p>
+    element: <RegisterProblemPage />
+  }
 ]);
 
 export default router;
